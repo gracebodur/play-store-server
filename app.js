@@ -2,6 +2,8 @@ const express = require ('express');
 const morgan = require('morgan');
 const datas = require('./playstoreData.js')
 
+console.log(datas)
+
 const app = express()
 
 app.use(morgan('common'))
@@ -19,25 +21,32 @@ app.get('/apps',(req, res) => {
         }
     }
 
-    let results = datas.filter(data =>
-        {
-        return data.App.toLowerCase().includes(data.toLowerCase())
-        }
-    )
-            // app
-            // .toLowerCase()
-            // .includes(app.toLowerCase()))
+    // let results = datas.filter(data =>
+    //     {
+    //     return data.App.toLowerCase().includes()
+    //     }
+    // )
+    //         // app
+    //         // .toLowerCase()
+    //         // .includes(app.toLowerCase()))
 
-    if(sort === 'App') {
-        results.sort((a,b) => {
-            return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
-        })
-    }
+    // if(sort === 'App') {
+    //     results.sort((a,b) => {
+    //         return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
+    //     })
+    // }
 
- res.json(results)
+    // if(sort === 'Rating') {
+    //     results.sort((a,b) => {
+    //         return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
+    //     })
+   // })
+
+ res.json(sort)
 })
 
 
 app.listen(8000, () => {
     console.log('Server started on PORT 8000')
 })
+
