@@ -2,16 +2,15 @@ const express = require ('express');
 const morgan = require('morgan');
 const datas = require('./playstoreData.js')
 
-console.log(datas)
-
 const app = express()
 
 app.use(morgan('common'))
 
 app.get('/apps',(req, res) => {
     // res.json(data)
-    const { sort = ''} = req.query
-    // const App = data.sort(App)
+    const {sort, genres} = req.query
+
+    // if(!search)
 
     if(sort) {
         if(!['Rating', 'App'].includes(sort)) {
@@ -21,28 +20,47 @@ app.get('/apps',(req, res) => {
         }
     }
 
-    // let results = datas.filter(data =>
+
+    if(genres) {
+        if(
+        !['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'].includes(genres)) {
+            return res
+            .status(400)
+            .send('Genres must include one of each: Action, Puzzle, Strategy, Casual, Arcade, Card')
+        }
+    }
+
+    let results = datas
+    
+    
+    // .filter(data =>
     //     {
-    //     return data.App.toLowerCase().includes()
+    //     return data.Genres.toLowerCase().includes()
     //     }
     // )
     //         // app
     //         // .toLowerCase()
     //         // .includes(app.toLowerCase()))
 
-    // if(sort === 'App') {
-    //     results.sort((a,b) => {
-    //         return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
-    //     })
-    // }
+    if(sort === 'App') {
+        results.sort((a,b) => {
+            return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
+        })
+    }
 
-    // if(sort === 'Rating') {
-    //     results.sort((a,b) => {
-    //         return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
-    //     })
-   // })
+    if(sort === 'Rating') {
+        results.sort((a,b) => {
+            return a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0;
+        })
+    }
 
- res.json(sort)
+    if(genres){
+        results = results.filter(result => {
+            return result.Genres === genres
+        });
+    }
+
+ res.json(results)
 })
 
 
