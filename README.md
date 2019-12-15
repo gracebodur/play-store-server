@@ -1,6 +1,6 @@
 # play-store-server
 
-Colaboration pair:
+Colaborators:
 
 Alvin Pierre-Louis
 Marie Grace Bodur
