@@ -65,8 +65,9 @@ app.get('/apps',(req, res) => {
  res.json(results)
 })
 
+module.exports = app
 
-app.listen(8000, () => {
-    console.log('Server started on PORT 8000')
-})
+// app.listen(8000, () => {
+//     console.log('Server started on PORT 8000')
+// })
 
