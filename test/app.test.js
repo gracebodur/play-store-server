@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const app = require('../app')
-const request = require('supertest')
+const supertest = require('supertest')
 
 //Make a request to GET /apps X
 //Confirm that the response status is 200 X
@@ -12,15 +12,35 @@ const request = require('supertest')
 describe('Playstore', () => {
     describe('GET /apps', () => {
         it('should return an array of apps', () => {
-            return request(app)
+            return supertest(app)
                 .get('/apps')
                 .expect(200)
+                .expect('Content-Type', /json/)
                 .then(res => {
                     expect(res.body).to.be.an('array')
+                    expect(res.body).to.have.lengthOf.at.least(1)
+                    const app =res.body[0]
+                    expect(app).to.include.all.keys('App', 'Rating', 'Genres')
                 })
         })
+
+        // it('should be 400 if sort is incorrect', () => {
+        //     return supertest(app)
+        //     .get('./apps')
+        //     .query({ sort: 'WRONG'})
+        //     .expect(400, 'Please add Rating or App as a sorting type')
+        // })
+
+        // it('should be 400 if genres is incorrect', () => {
+        //     return supertest(app)
+        //     .get('./apps')
+        //     .query({ genres: 'WRONG'})
+        //     .expect(400, 'Genres must include one of each: Action, Puzzle, Strategy, Casual, Arcade, Card')
+        // })
+
+
         it('GET /apps returns sorted array of ratings in descending order', () => {
-            return request(app)
+            return supertest(app)
             .get('/apps')
             .query({ sort: 'Rating'})
             .expect(200)
@@ -36,7 +56,7 @@ describe('Playstore', () => {
             })
         })
             it('GET /apps returns sorted array of apps in alphabetical order', () => {
-                return request(app)
+                return supertest(app)
                 .get('/apps')
                 .query({ sort: 'App'})
                 .expect(200)
@@ -51,15 +71,17 @@ describe('Playstore', () => {
                     expect(sorted).to.be.true
                 })
         })
-        it('GET /apps returns sorted array of genres based on the query', () => {
-            return request(app)
+        it('should filter by genres', () => {
+            return supertest(app)
             .get('/apps')
-            .query({ genres: ['Action', 'Puzzle', 'Strategy', 'Casual', 'Arcade', 'Card'] })
+            .query({ genres: 'Action'})
             .expect(200)
+            .expect('Content-Type', /json/)
             .then(res => {
-                expect(res.body).to.be.an('array')
-                expect({a: 1}).to.include.any.keys('a', 'b')
-                expect(genres).to.be.true
+                const results = res.body
+                results.forEach( app => {
+                    expect(app['Genres']).to.have.string('Action')
+                })
             }
             )
         })
